@@ -84,6 +84,7 @@ fi
 # -- Main
 
 TMPF="$(mktemp)"
+trap clean_exit 1 2 3 5 6 15 19
 
 cat <<-___EOF___>"$TMPF"
 $CSS
@@ -92,7 +93,7 @@ ___EOF___
 case $TYPE in
 [Pp][Dd][Ff])
 	pandoc -t html5 --css="$TMPF" "$IN" -o "$OUT" -s --pdf-engine=wkhtmltopdf
-	rm -f "$TMPF" &>/dev/null
+	clean_exit
 	;;
 *)
 	echo "$TYPE is not implemented. Sorry. Aborted" >&2
