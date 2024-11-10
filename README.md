@@ -4,7 +4,17 @@ Markdown to PDF using Pandoc via HTML (wkhtmltopdf) and CSS template
 
 ## Installation
 
+### Prerequisites
+
 `apt install pandoc wkhtmltopdf`
+
+### md2pdf
+
+Clone this git repo:  
+`git clone https://github.com/j4cc0/md2pdf.git`
+
+Set md2pdf.sh as executable:  
+`cd md2pdf; chmod 755 md2pdf.sh`
 
 ## Usage
 
