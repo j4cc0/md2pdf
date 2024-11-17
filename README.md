@@ -33,5 +33,15 @@ Printing pages (2/2)
 Done
 ```
 
+## Issues
+
+NOTE: wkhtmltopdf may require an X11 display / X11 forwarding. If unavailable, resulting in the following error message:
+
+```
+(wkhtmltopdf:2944): Gtk-WARNING **: 10:56:27.308: cannot open display: localhost:11.0
+Error producing PDF.
+```
+
+
 
 
