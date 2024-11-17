@@ -24,29 +24,39 @@ CSS="
 	}
 "
 
+SCRIPT="$(basename $0 | sed 's/\..*$//')"
+
 # -- Functions
+
+warn() {
+	echo "[!] $@" >&2
+	return 0
+}
+
+die() {
+	warn "$@. Aborted" >&2
+	exit 1
+}
 
 clean_exit() {
 	if [ "x${TMPF}x" = "xx" ]; then
-		echo "Internal error" >&2
-		return 1
+		die "$SCRIPT internal error"
 	fi
 	if [ ! -f "$TMPF" ]; then
-		echo "Internal error. Missing $TMPF" >&2
-		return 1
+		die "$SCRIPT Internal error. Missing $TMPF"
 	fi
 	rm -f "$TMPF" &>/dev/null || \
-		echo "Removing $TMPF had no clean exit. Please check" >&2
+		warn "$SCRIPT Removing $TMPF had no clean exit. Please check"
 	exit $?
 }
 
 # -- Parameter handling and sanity checking
 
 IN="$1"
+OUT="$2"
 
 if [ "x${IN}x" = "xx" ]; then
-	echo "Missing parameter. Aborted" >&2
-	exit 1
+	die "Missing parameter"
 fi
 
 if echo "$IN" | grep '://' &>/dev/null; then
@@ -55,30 +65,24 @@ if echo "$IN" | grep '://' &>/dev/null; then
 else
 	# Likely a local file
 	if [ ! -r "$IN" ]; then
-		echo "$IN not readable. Does it exist? Aborted" >&2
-		exit 1
+		die "$IN not readable. Does it exist?"
 	fi
 fi
-
-OUT="$2"
 
 if [ "x${OUT}x" = "xx" ]; then
 	OUT="$(basename \"$IN\" | sed 's/\..*$//').$TYPE"
 	if [ "x${OUT}x" ]; then
-		echo "Missing output filename. Aborted" >&2
-		exit 1
+		die "Missing output filename"
 	fi
 fi
 
 if [ -f "$OUT" ]; then
-	echo "$OUT already exists. Refusing to overwrite. Please fix. Aborted" >&2
-	exit 1
+	die "$OUT already exists. Refusing to overwrite. Please fix"
 fi
 
 touch "$OUT"
 if [ "$?" -ne 0 ]; then
-	echo "Failed to write $OUT. Please check. Aborted" >&2
-	exit 1
+	die "Failed to write $OUT. Please check"
 fi
 
 # -- Main
@@ -96,8 +100,7 @@ case $TYPE in
 	clean_exit
 	;;
 *)
-	echo "$TYPE is not implemented. Sorry. Aborted" >&2
-	exit 1
+	die "$TYPE is not implemented. Sorry"
 	;;
 esac
 
